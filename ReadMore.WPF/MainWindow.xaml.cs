@@ -3,7 +3,6 @@ using System.Windows;
 using ReadMore.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace ReadMore.WPF
 {
     public partial class MainWindow : Window
@@ -19,6 +18,14 @@ namespace ReadMore.WPF
             _currentUser = currentUser;
 
             LoadBooks();
+
+            // Alleen admin kan knoppen gebruiken
+            bool isAdmin = _context.UserRoles
+                                    .Any(ur => ur.UserId == _currentUser.Id && ur.RoleId == "1"); // "1" = Admin rol
+
+            AddBookButton.IsEnabled = isAdmin;
+            EditBookButton.IsEnabled = isAdmin;
+            DeleteBookButton.IsEnabled = isAdmin;
         }
 
         private void LoadBooks()
@@ -26,7 +33,6 @@ namespace ReadMore.WPF
             var books = _context.Books
                                 .Where(b => !b.IsDeleted)
                                 .ToList();
-
             BooksDataGrid.ItemsSource = books;
         }
 

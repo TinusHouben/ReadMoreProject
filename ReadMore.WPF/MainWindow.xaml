@@ -10,6 +10,7 @@
     <Grid Margin="10">
         <TabControl Name="MainTabControl">
 
+            <!-- Catalogusbeheer Tab -->
             <TabItem Header="Catalogusbeheer">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -38,6 +39,7 @@
                 </Grid>
             </TabItem>
 
+            <!-- Bestellingen Tab -->
             <TabItem Header="Bestellingen">
                 <Grid>
                     <TextBlock Text="Bestellingen tab - hier komt de CRUD voor Orders"
@@ -45,6 +47,7 @@
                 </Grid>
             </TabItem>
 
+            <!-- Rapportage Tab -->
             <TabItem Header="Rapportage">
                 <Grid>
                     <TextBlock Text="Rapportage tab - hier komt overzicht en totaalbedrag"
