@@ -24,6 +24,6 @@
         <TextBlock Text="Prijs:" Grid.Row="3"/>
         <TextBox x:Name="PriceTextBox" Grid.Row="3" Margin="100,0,0,5"/>
 
-        <Button Content="Opslaan" Grid.Row="4" Width="100" Margin="100,10,0,0" Click="SaveButton_Click"/>
+        <Button Content="Opslaan" Grid.Row="4" Width="100" Margin="0,5,260,5" Click="SaveButton_Click"/>
     </Grid>
 </Window>

@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Windows;
-using ReadMore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using ReadMore.Models;
 
 namespace ReadMore.WPF
 {
@@ -14,7 +14,6 @@ namespace ReadMore.WPF
         {
             InitializeComponent();
 
-            // DbContext instellen
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=ReadMoreDb;Trusted_Connection=True;")
                 .Options;
@@ -24,7 +23,7 @@ namespace ReadMore.WPF
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            string username = UsernameTextBox.Text;
+            string username = UsernameTextBox.Text.Trim();
             string password = PasswordBox.Password;
 
             var user = _context.Users.FirstOrDefault(u => u.UserName == username);
@@ -36,7 +35,6 @@ namespace ReadMore.WPF
 
                 if (result == PasswordVerificationResult.Success)
                 {
-                    // Login succesvol: open MainWindow
                     var mainWindow = new MainWindow(_context, user);
                     mainWindow.Show();
                     this.Close();
@@ -45,6 +43,12 @@ namespace ReadMore.WPF
             }
 
             MessageBox.Show("Onjuiste gebruikersnaam of wachtwoord.", "Login mislukt", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            var registerWindow = new RegisterWindow(_context);
+            registerWindow.ShowDialog();
         }
     }
 }

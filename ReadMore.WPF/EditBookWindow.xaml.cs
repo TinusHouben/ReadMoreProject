@@ -15,7 +15,6 @@ namespace ReadMore.WPF
             _context = context;
             _book = book;
 
-            // Vul de TextBoxen met bestaande waarden
             TitleTextBox.Text = _book.Title;
             AuthorTextBox.Text = _book.Author;
             PriceTextBox.Text = _book.Price.ToString();
