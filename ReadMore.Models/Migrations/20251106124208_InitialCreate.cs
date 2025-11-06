@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+#pragma warning disable CA1814
 
 namespace ReadMore.Models.Migrations
 {
-    /// <inheritdoc />
+    
     public partial class InitialCreate : Migration
     {
-        /// <inheritdoc />
+        
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -32,7 +32,7 @@ namespace ReadMore.Models.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -61,6 +61,7 @@ namespace ReadMore.Models.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ISBN = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -76,6 +77,7 @@ namespace ReadMore.Models.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Series = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NumberInSeries = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -210,23 +212,13 @@ namespace ReadMore.Models.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Books",
-                columns: new[] { "Id", "Author", "IsDeleted", "Price", "Title" },
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "Author A", false, 19.99m, "Book One" },
-                    { 2, "Author B", false, 25.50m, "Book Two" }
+                    { "1", null, "Admin", "ADMIN" },
+                    { "2", null, "User", "USER" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Comics",
-                columns: new[] { "Id", "IsDeleted", "NumberInSeries", "Price", "Series", "Title" },
-                values: new object[] { 1, false, 1, 9.99m, "Series A", "Comic One" });
-
-            migrationBuilder.InsertData(
-                table: "Orders",
-                columns: new[] { "Id", "BookId", "ComicId", "IsDeleted", "Quantity", "TotalPrice" },
-                values: new object[] { 1, 1, null, false, 2, 39.98m });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -268,7 +260,7 @@ namespace ReadMore.Models.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
         }
 
-        /// <inheritdoc />
+        
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

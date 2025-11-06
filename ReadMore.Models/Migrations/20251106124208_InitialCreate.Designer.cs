@@ -12,7 +12,7 @@ using ReadMore.Models;
 namespace ReadMore.Models.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251105180941_InitialCreate")]
+    [Migration("20251106124208_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -50,6 +50,20 @@ namespace ReadMore.Models.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -177,10 +191,6 @@ namespace ReadMore.Models.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -203,6 +213,9 @@ namespace ReadMore.Models.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -239,6 +252,10 @@ namespace ReadMore.Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ISBN")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -252,24 +269,6 @@ namespace ReadMore.Models.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Author = "Author A",
-                            IsDeleted = false,
-                            Price = 19.99m,
-                            Title = "Book One"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Author = "Author B",
-                            IsDeleted = false,
-                            Price = 25.50m,
-                            Title = "Book Two"
-                        });
                 });
 
             modelBuilder.Entity("ReadMore.Models.Comic", b =>
@@ -279,6 +278,10 @@ namespace ReadMore.Models.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -300,17 +303,6 @@ namespace ReadMore.Models.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Comics");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IsDeleted = false,
-                            NumberInSeries = 1,
-                            Price = 9.99m,
-                            Series = "Series A",
-                            Title = "Comic One"
-                        });
                 });
 
             modelBuilder.Entity("ReadMore.Models.Order", b =>
@@ -339,16 +331,6 @@ namespace ReadMore.Models.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BookId = 1,
-                            IsDeleted = false,
-                            Quantity = 2,
-                            TotalPrice = 39.98m
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
