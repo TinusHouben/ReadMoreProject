@@ -1,0 +1,60 @@
+﻿<Window x:Class="ReadMore.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ReadMore.WPF"
+        mc:Ignorable="d"
+        Title="ReadMore Management" Height="600" Width="800">
+
+    <Grid Margin="10">
+        <TabControl Name="MainTabControl">
+
+            <!-- Catalogusbeheer -->
+            <TabItem Header="Catalogusbeheer">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button Name="AddBookButton" Content="Boek Toevoegen" Width="120" Margin="0,0,10,0" Click="AddBookButton_Click"/>
+                        <Button Name="EditBookButton" Content="Bewerk Boek" Width="120" Margin="0,0,10,0" Click="EditBookButton_Click"/>
+                        <Button Name="DeleteBookButton" Content="Verwijder Boek" Width="120" Click="DeleteBookButton_Click"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="BooksDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                            <DataGridTextColumn Header="Titel" Binding="{Binding Title}" Width="*"/>
+                            <DataGridTextColumn Header="Auteur" Binding="{Binding Author}" Width="150"/>
+                            <DataGridTextColumn Header="Prijs" Width="100">
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="Price" StringFormat="C"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- Bestellingen -->
+            <TabItem Header="Bestellingen">
+                <Grid>
+                    <TextBlock Text="Bestellingen tab - hier komt de CRUD voor Orders"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
+            </TabItem>
+
+            <!-- Rapportage -->
+            <TabItem Header="Rapportage">
+                <Grid>
+                    <TextBlock Text="Rapportage tab - hier komt overzicht en totaalbedrag"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>
