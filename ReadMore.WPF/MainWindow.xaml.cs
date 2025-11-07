@@ -1,20 +1,24 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
-using Microsoft.EntityFrameworkCore;
 using ReadMore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ReadMore.WPF
 {
     public partial class MainWindow : Window
     {
         private readonly ApplicationDbContext _context;
-        private readonly ApplicationUser _user;
+        private readonly ApplicationUser _currentUser;
+        private List<Book> _booksList = new List<Book>();
+        private List<Order> _orders = new List<Order>();
 
         public MainWindow(ApplicationDbContext context, ApplicationUser user)
         {
             InitializeComponent();
             _context = context;
-            _user = user;
+            _currentUser = user;
 
             LoadBooks();
             LoadOrders();
@@ -22,19 +26,23 @@ namespace ReadMore.WPF
 
         private void LoadBooks()
         {
-            var books = _context.Books.Where(b => !b.IsDeleted).ToList();
-            BooksDataGrid.ItemsSource = books;
+            _booksList = _context.Books
+                .Where(b => !b.IsDeleted)
+                .ToList();
+
+            BooksDataGrid.ItemsSource = _booksList;
+            AdminBooksDataGrid.ItemsSource = _booksList;
         }
 
         private void LoadOrders()
         {
-            var orders = _context.Orders
-                .Include(o => o.Books)
+            _orders = _context.Orders
                 .Include(o => o.User)
+                .Include(o => o.Books)
                 .Where(o => !o.IsDeleted)
                 .ToList();
 
-            var displayOrders = orders.Select(o => new
+            OrdersDataGrid.ItemsSource = _orders.Select(o => new
             {
                 o.Id,
                 UserName = o.User?.UserName ?? "Onbekend",
@@ -42,13 +50,29 @@ namespace ReadMore.WPF
                 o.TotalPrice,
                 o.OrderDate
             }).ToList();
+        }
 
-            OrdersDataGrid.ItemsSource = displayOrders;
+        private void SearchCatalogTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            var filtered = _booksList
+                .Where(b => b.Title.Contains(SearchCatalogTextBox.Text, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            BooksDataGrid.ItemsSource = filtered;
+        }
+
+        private void SearchAdminTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            var filtered = _booksList
+                .Where(b => b.Title.Contains(SearchAdminTextBox.Text, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            AdminBooksDataGrid.ItemsSource = filtered;
         }
 
         private void CreateOrderButton_Click(object sender, RoutedEventArgs e)
         {
-            var orderWindow = new CreateOrderWindow(_context, _user);
+            var orderWindow = new CreateOrderWindow(_context, _currentUser);
             orderWindow.ShowDialog();
             LoadOrders();
         }
@@ -56,6 +80,5 @@ namespace ReadMore.WPF
         private void AddBookButton_Click(object sender, RoutedEventArgs e) { }
         private void EditBookButton_Click(object sender, RoutedEventArgs e) { }
         private void DeleteBookButton_Click(object sender, RoutedEventArgs e) { }
-        private void SearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) { }
     }
 }

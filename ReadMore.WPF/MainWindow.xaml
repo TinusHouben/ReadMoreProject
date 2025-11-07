@@ -4,15 +4,8 @@
         Title="ReadMore Management" Height="600" Width="900"
         WindowStartupLocation="CenterScreen">
     <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <TabControl x:Name="MainTabControl">
 
-        <TextBox x:Name="SearchTextBox" Grid.Row="0" Width="300" Height="25" Margin="0,0,0,10"
-                 TextChanged="SearchTextBox_TextChanged"/>
-
-        <TabControl Grid.Row="1" x:Name="MainTabControl">
             <TabItem Header="Catalogusbeheer">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -20,11 +13,11 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <Button Name="AddBookButton" Content="Boek Toevoegen" Width="120" Margin="0,0,10,0" Click="AddBookButton_Click"/>
-                        <Button Name="EditBookButton" Content="Bewerk Boek" Width="120" Margin="0,0,10,0" Click="EditBookButton_Click"/>
-                        <Button Name="DeleteBookButton" Content="Verwijder Boek" Width="120" Margin="0,0,10,0" Click="DeleteBookButton_Click"/>
-                        <Button Name="CreateOrderButton" Content="Nieuwe Bestelling" Width="150" Margin="10,0,0,0" Click="CreateOrderButton_Click"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
+                        <TextBox x:Name="SearchCatalogTextBox" Width="300" Height="25"
+                                 TextChanged="SearchCatalogTextBox_TextChanged"/>
+                        <Button Name="CreateOrderButton" Content="Nieuwe Bestelling" Width="150" Margin="10,0,0,0"
+                                Click="CreateOrderButton_Click"/>
                     </StackPanel>
 
                     <DataGrid x:Name="BooksDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
@@ -51,11 +44,36 @@
                 </DataGrid>
             </TabItem>
 
-            <TabItem Header="Admin">
-                <StackPanel Margin="10">
-                    <TextBlock Text="Admin opties komen hier" FontWeight="Bold"/>
-                </StackPanel>
+            <TabItem Header="Admin" x:Name="AdminTab">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
+                        <TextBox x:Name="SearchAdminTextBox" Width="300" Height="25"
+                                 TextChanged="SearchAdminTextBox_TextChanged"/>
+                        <Button Name="AddBookButton" Content="Boek Toevoegen" Width="120" Margin="10,0,0,0"
+                                Click="AddBookButton_Click"/>
+                        <Button Name="EditBookButton" Content="Bewerk Boek" Width="120" Margin="10,0,0,0"
+                                Click="EditBookButton_Click"/>
+                        <Button Name="DeleteBookButton" Content="Verwijder Boek" Width="120" Margin="10,0,0,0"
+                                Click="DeleteBookButton_Click"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="AdminBooksDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                            <DataGridTextColumn Header="Titel" Binding="{Binding Title}" Width="*"/>
+                            <DataGridTextColumn Header="Auteur" Binding="{Binding Author}" Width="200"/>
+                            <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="150"/>
+                            <DataGridTextColumn Header="Prijs (€)" Binding="{Binding Price}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </TabItem>
+
         </TabControl>
     </Grid>
 </Window>
