@@ -17,10 +17,10 @@ namespace ReadMore.WPF
             using (var context = new ApplicationDbContext(options))
             {
                 context.Database.Migrate();
-                context.SeedAdminUser();
             }
 
-            new LoginWindow().Show();
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
         }
     }
 }

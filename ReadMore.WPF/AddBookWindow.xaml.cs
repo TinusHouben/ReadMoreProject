@@ -1,6 +1,5 @@
 ﻿using ReadMore.Models;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace ReadMore.WPF
 {
@@ -20,7 +19,7 @@ namespace ReadMore.WPF
             {
                 Title = TitleTextBox.Text,
                 Author = AuthorTextBox.Text,
-                ISBN = IsbnTextBox.Text, 
+                ISBN = IsbnTextBox.Text,
                 Price = decimal.Parse(PriceTextBox.Text),
                 IsDeleted = false
             };
@@ -29,6 +28,5 @@ namespace ReadMore.WPF
             _context.SaveChanges();
             this.Close();
         }
-
     }
 }

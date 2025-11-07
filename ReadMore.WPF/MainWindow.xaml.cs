@@ -1,82 +1,61 @@
 ﻿using System.Linq;
 using System.Windows;
-using ReadMore.Models;
 using Microsoft.EntityFrameworkCore;
+using ReadMore.Models;
 
 namespace ReadMore.WPF
 {
     public partial class MainWindow : Window
     {
         private readonly ApplicationDbContext _context;
-        private readonly ApplicationUser _currentUser;
+        private readonly ApplicationUser _user;
 
-        public MainWindow(ApplicationDbContext context, ApplicationUser currentUser)
+        public MainWindow(ApplicationDbContext context, ApplicationUser user)
         {
             InitializeComponent();
-
             _context = context;
-            _currentUser = currentUser;
+            _user = user;
 
             LoadBooks();
-
-            // Alleen admin kan knoppen gebruiken
-            bool isAdmin = _context.UserRoles
-                                    .Any(ur => ur.UserId == _currentUser.Id && ur.RoleId == "1"); // "1" = Admin rol
-
-            AddBookButton.IsEnabled = isAdmin;
-            EditBookButton.IsEnabled = isAdmin;
-            DeleteBookButton.IsEnabled = isAdmin;
+            LoadOrders();
         }
 
         private void LoadBooks()
         {
-            var books = _context.Books
-                                .Where(b => !b.IsDeleted)
-                                .ToList();
+            var books = _context.Books.Where(b => !b.IsDeleted).ToList();
             BooksDataGrid.ItemsSource = books;
         }
 
-        private void AddBookButton_Click(object sender, RoutedEventArgs e)
+        private void LoadOrders()
         {
-            var addBookWindow = new AddBookWindow(_context);
-            addBookWindow.ShowDialog();
-            LoadBooks();
+            var orders = _context.Orders
+                .Include(o => o.Books)
+                .Include(o => o.User)
+                .Where(o => !o.IsDeleted)
+                .ToList();
+
+            var displayOrders = orders.Select(o => new
+            {
+                o.Id,
+                UserName = o.User?.UserName ?? "Onbekend",
+                BookTitles = string.Join(", ", o.Books.Select(b => b.Title)),
+                o.TotalPrice,
+                o.OrderDate
+            }).ToList();
+
+            OrdersDataGrid.ItemsSource = displayOrders;
         }
 
-        private void EditBookButton_Click(object sender, RoutedEventArgs e)
+        private void CreateOrderButton_Click(object sender, RoutedEventArgs e)
         {
-            if (BooksDataGrid.SelectedItem is Book selectedBook)
-            {
-                var editBookWindow = new EditBookWindow(_context, selectedBook);
-                editBookWindow.ShowDialog();
-                LoadBooks();
-            }
-            else
-            {
-                MessageBox.Show("Selecteer eerst een boek om te bewerken.",
-                                "Waarschuwing", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            var orderWindow = new CreateOrderWindow(_context, _user);
+            orderWindow.ShowDialog();
+            LoadOrders();
         }
 
-        private void DeleteBookButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (BooksDataGrid.SelectedItem is Book selectedBook)
-            {
-                var result = MessageBox.Show($"Weet je zeker dat je '{selectedBook.Title}' wilt verwijderen?",
-                                             "Bevestigen", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    selectedBook.IsDeleted = true;
-                    _context.SaveChanges();
-                    LoadBooks();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Selecteer eerst een boek om te verwijderen.",
-                                "Waarschuwing", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
+        private void AddBookButton_Click(object sender, RoutedEventArgs e) { }
+        private void EditBookButton_Click(object sender, RoutedEventArgs e) { }
+        private void DeleteBookButton_Click(object sender, RoutedEventArgs e) { }
+        private void SearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) { }
     }
 }

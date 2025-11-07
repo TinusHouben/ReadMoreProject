@@ -18,7 +18,6 @@
         <TextBox x:Name="AuthorTextBox" Grid.Row="1" Margin="100,0,0,5"/>
 
         <TextBlock Text="ISBN:" Grid.Row="2"/>
-        <!-- ✅ toegevoegd -->
         <TextBox x:Name="IsbnTextBox" Grid.Row="2" Margin="100,0,0,5"/>
 
         <TextBlock Text="Prijs:" Grid.Row="3"/>
