@@ -4,6 +4,10 @@
         Title="ReadMore Management" Height="600" Width="900"
         WindowStartupLocation="CenterScreen">
     <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
         <TabControl x:Name="MainTabControl">
 
             <TabItem Header="Catalogusbeheer">
@@ -13,14 +17,14 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
-                        <TextBox x:Name="SearchCatalogTextBox" Width="300" Height="25"
-                                 TextChanged="SearchCatalogTextBox_TextChanged"/>
-                        <Button Name="CreateOrderButton" Content="Nieuwe Bestelling" Width="150" Margin="10,0,0,0"
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBox x:Name="CatalogusSearchTextBox" Width="300" Height="25"
+                                 TextChanged="CatalogusSearchTextBox_TextChanged" Margin="0,0,10,0"/>
+                        <Button Name="CreateOrderButton" Content="Nieuwe Bestelling" Width="150" 
                                 Click="CreateOrderButton_Click"/>
                     </StackPanel>
 
-                    <DataGrid x:Name="BooksDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
+                    <DataGrid x:Name="CatalogusDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                             <DataGridTextColumn Header="Titel" Binding="{Binding Title}" Width="*"/>
@@ -44,31 +48,28 @@
                 </DataGrid>
             </TabItem>
 
-            <TabItem Header="Admin" x:Name="AdminTab">
+            <TabItem Header="Admin">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
-                        <TextBox x:Name="SearchAdminTextBox" Width="300" Height="25"
-                                 TextChanged="SearchAdminTextBox_TextChanged"/>
-                        <Button Name="AddBookButton" Content="Boek Toevoegen" Width="120" Margin="10,0,0,0"
-                                Click="AddBookButton_Click"/>
-                        <Button Name="EditBookButton" Content="Bewerk Boek" Width="120" Margin="10,0,0,0"
-                                Click="EditBookButton_Click"/>
-                        <Button Name="DeleteBookButton" Content="Verwijder Boek" Width="120" Margin="10,0,0,0"
-                                Click="DeleteBookButton_Click"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBox x:Name="AdminSearchTextBox" Width="300" Height="25"
+                                 TextChanged="AdminSearchTextBox_TextChanged" Margin="0,0,10,0"/>
+                        <Button Name="AddBookButton" Content="Boek Toevoegen" Width="120" Click="AddBookButton_Click"/>
+                        <Button Name="EditBookButton" Content="Bewerk Boek" Width="120" Margin="10,0,0,0" Click="EditBookButton_Click"/>
+                        <Button Name="DeleteBookButton" Content="Verwijder Boek" Width="120" Margin="10,0,0,0" Click="DeleteBookButton_Click"/>
                     </StackPanel>
 
-                    <DataGrid x:Name="AdminBooksDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
+                    <DataGrid x:Name="AdminOrdersDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                            <DataGridTextColumn Header="Titel" Binding="{Binding Title}" Width="*"/>
-                            <DataGridTextColumn Header="Auteur" Binding="{Binding Author}" Width="200"/>
-                            <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="150"/>
-                            <DataGridTextColumn Header="Prijs (€)" Binding="{Binding Price}" Width="100"/>
+                            <DataGridTextColumn Header="Gebruiker" Binding="{Binding UserName}" Width="150"/>
+                            <DataGridTextColumn Header="Boeken" Binding="{Binding BookTitles}" Width="*"/>
+                            <DataGridTextColumn Header="Totaalprijs (€)" Binding="{Binding TotalPrice}" Width="100"/>
+                            <DataGridCheckBoxColumn Header="Verwerkt" Binding="{Binding IsProcessed, Mode=TwoWay}" Width="80"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

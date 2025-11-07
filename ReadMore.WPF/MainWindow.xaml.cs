@@ -11,7 +11,7 @@ namespace ReadMore.WPF
     {
         private readonly ApplicationDbContext _context;
         private readonly ApplicationUser _currentUser;
-        private List<Book> _booksList = new List<Book>();
+        private List<Book> _books = new List<Book>();
         private List<Order> _orders = new List<Order>();
 
         public MainWindow(ApplicationDbContext context, ApplicationUser user)
@@ -20,18 +20,18 @@ namespace ReadMore.WPF
             _context = context;
             _currentUser = user;
 
-            LoadBooks();
+            LoadCatalogus();
             LoadOrders();
+            LoadAdminOrders();
         }
 
-        private void LoadBooks()
+        private void LoadCatalogus()
         {
-            _booksList = _context.Books
+            _books = _context.Books
                 .Where(b => !b.IsDeleted)
                 .ToList();
 
-            BooksDataGrid.ItemsSource = _booksList;
-            AdminBooksDataGrid.ItemsSource = _booksList;
+            CatalogusDataGrid.ItemsSource = _books;
         }
 
         private void LoadOrders()
@@ -52,22 +52,48 @@ namespace ReadMore.WPF
             }).ToList();
         }
 
-        private void SearchCatalogTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void LoadAdminOrders()
         {
-            var filtered = _booksList
-                .Where(b => b.Title.Contains(SearchCatalogTextBox.Text, StringComparison.OrdinalIgnoreCase))
+            var adminOrders = _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.Books)
+                .Where(o => !o.IsDeleted)
                 .ToList();
 
-            BooksDataGrid.ItemsSource = filtered;
+            AdminOrdersDataGrid.ItemsSource = adminOrders.Select(o => new AdminOrderView
+            {
+                Id = o.Id,
+                UserName = o.User?.UserName ?? "Onbekend",
+                BookTitles = string.Join(", ", o.Books.Select(b => b.Title)),
+                TotalPrice = o.TotalPrice,
+                IsProcessed = o.IsProcessed
+            }).ToList();
         }
 
-        private void SearchAdminTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void CatalogusSearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            var filtered = _booksList
-                .Where(b => b.Title.Contains(SearchAdminTextBox.Text, StringComparison.OrdinalIgnoreCase))
+            var filtered = _books
+                .Where(b => b.Title.IndexOf(CatalogusSearchTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0)
                 .ToList();
 
-            AdminBooksDataGrid.ItemsSource = filtered;
+            CatalogusDataGrid.ItemsSource = filtered;
+        }
+
+        private void AdminSearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            var filtered = _context.Books
+                .AsEnumerable() // client-side filtering
+                .Where(b => b.Title.Contains(AdminSearchTextBox.Text, StringComparison.OrdinalIgnoreCase) && !b.IsDeleted)
+                .ToList();
+
+            AdminOrdersDataGrid.ItemsSource = filtered.Select(b => new AdminOrderView
+            {
+                Id = b.Id.ToString(),
+                UserName = "",
+                BookTitles = b.Title,
+                TotalPrice = b.Price,
+                IsProcessed = false
+            }).ToList();
         }
 
         private void CreateOrderButton_Click(object sender, RoutedEventArgs e)
@@ -75,9 +101,17 @@ namespace ReadMore.WPF
             var orderWindow = new CreateOrderWindow(_context, _currentUser);
             orderWindow.ShowDialog();
             LoadOrders();
+            LoadAdminOrders();
         }
 
-        private void AddBookButton_Click(object sender, RoutedEventArgs e) { }
+        private void AddBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            var addBookWindow = new AddBookWindow(_context);
+            addBookWindow.ShowDialog();
+            LoadCatalogus();
+            LoadAdminOrders();
+        }
+
         private void EditBookButton_Click(object sender, RoutedEventArgs e) { }
         private void DeleteBookButton_Click(object sender, RoutedEventArgs e) { }
     }

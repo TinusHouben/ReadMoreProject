@@ -1,5 +1,5 @@
-﻿using ReadMore.Models;
-using System.Windows;
+﻿using System.Windows;
+using ReadMore.Models;
 
 namespace ReadMore.WPF
 {
@@ -20,13 +20,17 @@ namespace ReadMore.WPF
                 Title = TitleTextBox.Text,
                 Author = AuthorTextBox.Text,
                 ISBN = IsbnTextBox.Text,
-                Price = decimal.Parse(PriceTextBox.Text),
-                IsDeleted = false
+                Price = decimal.TryParse(PriceTextBox.Text, out var price) ? price : 0
             };
 
             _context.Books.Add(book);
             _context.SaveChanges();
-            this.Close();
+            DialogResult = true;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
         }
     }
 }

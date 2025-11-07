@@ -12,5 +12,7 @@ namespace ReadMore.Models
         public decimal TotalPrice { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
         public bool IsDeleted { get; set; }
+
+        public bool IsProcessed { get; set; } = false;
     }
 }

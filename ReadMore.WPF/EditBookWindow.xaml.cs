@@ -1,6 +1,5 @@
-﻿using ReadMore.Models;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
+using ReadMore.Models;
 
 namespace ReadMore.WPF
 {
@@ -17,17 +16,21 @@ namespace ReadMore.WPF
 
             TitleTextBox.Text = _book.Title;
             AuthorTextBox.Text = _book.Author;
-            PriceTextBox.Text = _book.Price.ToString();
+            IsbnTextBox.Text = _book.ISBN;
+            PriceTextBox.Text = _book.Price.ToString("0.00");
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             _book.Title = TitleTextBox.Text;
             _book.Author = AuthorTextBox.Text;
-            _book.Price = decimal.Parse(PriceTextBox.Text);
+            _book.ISBN = IsbnTextBox.Text;
+
+            if (decimal.TryParse(PriceTextBox.Text, out decimal price))
+                _book.Price = price;
 
             _context.SaveChanges();
-            this.Close();
+            Close();
         }
     }
 }
