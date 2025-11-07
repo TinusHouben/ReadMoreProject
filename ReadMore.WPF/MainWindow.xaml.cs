@@ -53,6 +53,13 @@ namespace ReadMore.WPF
             LoadOrdersPublic();
         }
 
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+            this.Close();
+        }
+
         private void LoadAdminBooks()
         {
             var books = _context.Books.Where(b => !b.IsDeleted).ToList();
@@ -69,13 +76,11 @@ namespace ReadMore.WPF
 
         private void EditBookButton_Click(object sender, RoutedEventArgs e)
         {
-            Book selected = null;
-            if (AdminBooksDataGrid.SelectedItem is Book ab) selected = ab;
-            else if (CatalogusDataGrid.SelectedItem is Book cb) selected = cb;
+            Book selected = AdminBooksDataGrid.SelectedItem as Book;
 
             if (selected == null)
             {
-                MessageBox.Show("Selecteer eerst een boek in de boekenlijst om te bewerken.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Selecteer eerst een boek om te bewerken.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -88,13 +93,11 @@ namespace ReadMore.WPF
 
         private void DeleteBookButton_Click(object sender, RoutedEventArgs e)
         {
-            Book selected = null;
-            if (AdminBooksDataGrid.SelectedItem is Book ab) selected = ab;
-            else if (CatalogusDataGrid.SelectedItem is Book cb) selected = cb;
+            Book selected = AdminBooksDataGrid.SelectedItem as Book;
 
             if (selected == null)
             {
-                MessageBox.Show("Selecteer eerst een boek in de boekenlijst om te verwijderen.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Selecteer eerst een boek om te verwijderen.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -104,7 +107,6 @@ namespace ReadMore.WPF
                 selected.IsDeleted = true;
                 _context.Books.Update(selected);
                 _context.SaveChanges();
-
                 LoadCatalogus();
                 LoadAdminBooks();
             }
@@ -177,6 +179,7 @@ namespace ReadMore.WPF
                 MessageBox.Show($"Bestelling {orderEntity.Id} gemarkeerd als verwerkt.", "Gereed", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+
         private void LoadOrdersPublic()
         {
             var orders = _context.Orders

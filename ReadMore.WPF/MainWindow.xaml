@@ -24,6 +24,7 @@
 
                         <Button x:Name="CreateOrderButton" Content="🛒 Nieuwe Bestelling" Width="160"
                                 Click="CreateOrderButton_Click"/>
+                        <Button Content="🚪 Logout" Width="100" Margin="10,0,0,0" Click="LogoutButton_Click"/>
                     </StackPanel>
 
                     <DataGrid x:Name="CatalogusDataGrid" Grid.Row="1"
@@ -40,21 +41,16 @@
                 </Grid>
             </TabItem>
 
-            <!-- ADMIN TAB: bevat nu zowel boeken (admin) als bestellingen (admin) -->
+            <!-- ADMIN TAB -->
             <TabItem Header="Admin">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <!-- controls -->
                         <RowDefinition Height="2*"/>
-                        <!-- boeken -->
                         <RowDefinition Height="*"/>
-                        <!-- bestellingen -->
                         <RowDefinition Height="Auto"/>
-                        <!-- footer -->
                     </Grid.RowDefinitions>
 
-                    <!-- Controls (zoek, knoppen) -->
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
                         <Grid Width="350" Height="28" Margin="0,0,10,0">
                             <TextBox x:Name="AdminSearchTextBox" VerticalAlignment="Center"
@@ -67,12 +63,11 @@
                         <Button Content="📘 Voeg Boek Toe" Width="130" Margin="0,0,8,0" Click="AddBookButton_Click"/>
                         <Button Content="✏️ Bewerk Boek" Width="130" Margin="0,0,8,0" Click="EditBookButton_Click"/>
                         <Button Content="❌ Verwijder Boek" Width="130" Margin="0,0,8,0" Click="DeleteBookButton_Click"/>
-
                         <Button Content="⟳ Vernieuw" Width="100" Margin="12,0,8,0" Click="RefreshOrdersButton_Click"/>
                         <Button Content="✓ Markeer als Verwerkt" Width="160" Click="MarkProcessedButton_Click"/>
+                        <Button Content="🚪 Logout" Width="100" Margin="10,0,0,0" Click="LogoutButton_Click"/>
                     </StackPanel>
 
-                    <!-- Admin boekenlijst -->
                     <GroupBox Header="Boeken (Admin)" Grid.Row="1" Margin="0,0,0,10">
                         <DataGrid x:Name="AdminBooksDataGrid" AutoGenerateColumns="False" CanUserAddRows="False"
                                   IsReadOnly="True" SelectionMode="Single">
@@ -86,7 +81,6 @@
                         </DataGrid>
                     </GroupBox>
 
-                    <!-- Admin bestellingen -->
                     <GroupBox Header="Bestellingen (Admin)" Grid.Row="2">
                         <DataGrid x:Name="AdminOrdersDataGrid" AutoGenerateColumns="False" CanUserAddRows="False"
                                   IsReadOnly="False" SelectionMode="Single">
@@ -105,7 +99,7 @@
                 </Grid>
             </TabItem>
 
-            <!-- BESTELLINGEN TAB (publiek) -->
+            <!-- BESTELLINGEN TAB -->
             <TabItem Header="Bestellingen">
                 <DataGrid x:Name="OrdersDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
                     <DataGrid.Columns>
