@@ -14,5 +14,6 @@ namespace ReadMore.Models
         public bool IsDeleted { get; set; }
 
         public bool IsProcessed { get; set; } = false;
+
     }
 }
