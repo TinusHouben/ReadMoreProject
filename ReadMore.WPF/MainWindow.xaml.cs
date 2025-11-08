@@ -14,6 +14,7 @@ namespace ReadMore.WPF
 
         private List<Book> _catalogBooks = new();
         private List<AdminOrderView> _adminOrders = new();
+        private List<ApplicationUser> _users = new();
 
         public MainWindow(ApplicationDbContext context, ApplicationUser user)
         {
@@ -25,8 +26,10 @@ namespace ReadMore.WPF
             LoadAdminBooks();
             LoadAdminOrders();
             LoadOrdersPublic();
+            LoadUsers(); // gebruikersbeheer
         }
 
+        #region Catalogus
         private void LoadCatalogus()
         {
             _catalogBooks = _context.Books.Where(b => !b.IsDeleted).ToList();
@@ -52,14 +55,18 @@ namespace ReadMore.WPF
             LoadAdminOrders();
             LoadOrdersPublic();
         }
+        #endregion
 
+        #region Logout
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             var loginWindow = new LoginWindow();
             loginWindow.Show();
             this.Close();
         }
+        #endregion
 
+        #region Admin boekenbeheer
         private void LoadAdminBooks()
         {
             var books = _context.Books.Where(b => !b.IsDeleted).ToList();
@@ -111,7 +118,9 @@ namespace ReadMore.WPF
                 LoadAdminBooks();
             }
         }
+        #endregion
 
+        #region Admin bestellingen
         private void LoadAdminOrders()
         {
             _adminOrders = _context.Orders
@@ -179,7 +188,9 @@ namespace ReadMore.WPF
                 MessageBox.Show($"Bestelling {orderEntity.Id} gemarkeerd als verwerkt.", "Gereed", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+        #endregion
 
+        #region Publieke bestellingen
         private void LoadOrdersPublic()
         {
             var orders = _context.Orders
@@ -197,5 +208,67 @@ namespace ReadMore.WPF
                 OrderDate = o.OrderDate.ToString("dd/MM/yyyy HH:mm")
             }).ToList();
         }
+        #endregion
+
+        #region Gebruikersbeheer
+        private void LoadUsers()
+        {
+            _users = _context.Users.ToList();
+            UsersDataGrid.ItemsSource = _users;
+        }
+
+        private void UsersSearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            string q = UsersSearchTextBox.Text?.Trim() ?? string.Empty;
+            UsersPlaceholder.Visibility = string.IsNullOrEmpty(q) ? Visibility.Visible : Visibility.Hidden;
+
+            var filtered = _users
+                .Where(u => u.UserName.Contains(q, StringComparison.OrdinalIgnoreCase) || u.Email.Contains(q, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            UsersDataGrid.ItemsSource = filtered;
+        }
+
+        private void DeleteUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (UsersDataGrid.SelectedItem is not ApplicationUser selected)
+            {
+                MessageBox.Show("Selecteer eerst een gebruiker om te verwijderen.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (selected.Id == _currentUser.Id)
+            {
+                MessageBox.Show("Je kunt jezelf niet verwijderen.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var ok = MessageBox.Show($"Weet je zeker dat je '{selected.UserName}' wilt verwijderen?", "Bevestigen", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (ok == MessageBoxResult.Yes)
+            {
+                _context.Users.Remove(selected);
+                _context.SaveChanges();
+                LoadUsers();
+            }
+        }
+
+        private void RoleComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (sender is not System.Windows.Controls.ComboBox comboBox) return;
+            if (comboBox.DataContext is not ApplicationUser selected) return;
+
+            if (selected.Id == _currentUser.Id)
+            {
+                MessageBox.Show("Je kunt je eigen rol niet veranderen.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
+                LoadUsers();
+                return;
+            }
+
+            string newRole = (comboBox.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content.ToString() ?? "User";
+            selected.Role = newRole;
+            _context.Users.Update(selected);
+            _context.SaveChanges();
+        }
+        #endregion
     }
 }
