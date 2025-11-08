@@ -23,8 +23,8 @@ namespace ReadMore.WPF
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            string username = UsernameTextBox.Text;
-            string password = PasswordBox.Password;
+            string username = UsernameTextBox.Text.Trim();
+            string password = PasswordBox.Password.Trim();
 
             var user = _context.Users.FirstOrDefault(u => u.UserName == username);
 
@@ -42,39 +42,29 @@ namespace ReadMore.WPF
                 }
             }
 
-            MessageBox.Show(
-                "Onjuiste gebruikersnaam of wachtwoord.",
+            MessageBox.Show("Onjuiste gebruikersnaam of wachtwoord.",
                 "Login mislukt",
                 MessageBoxButton.OK,
-                MessageBoxImage.Error
-            );
+                MessageBoxImage.Error);
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            string username = UsernameTextBox.Text;
-            string password = PasswordBox.Password;
+            string username = UsernameTextBox.Text.Trim();
+            string password = PasswordBox.Password.Trim();
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show(
-                    "Vul een gebruikersnaam en wachtwoord in.",
-                    "Registratie mislukt",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning
-                );
+                MessageBox.Show("Vul een gebruikersnaam en wachtwoord in.",
+                    "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             var existingUser = _context.Users.FirstOrDefault(u => u.UserName == username);
             if (existingUser != null)
             {
-                MessageBox.Show(
-                    "Deze gebruikersnaam is al in gebruik.",
-                    "Registratie mislukt",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning
-                );
+                MessageBox.Show("Deze gebruikersnaam is al in gebruik.",
+                    "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -93,12 +83,8 @@ namespace ReadMore.WPF
             _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            MessageBox.Show(
-                "Registratie succesvol! Je kunt nu inloggen.",
-                "Succes",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information
-            );
+            MessageBox.Show("Registratie succesvol! Je kunt nu inloggen.",
+                "Succes", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

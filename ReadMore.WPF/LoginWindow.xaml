@@ -9,7 +9,6 @@
         FontFamily="Segoe UI">
 
     <Grid>
-        <!-- Achtergrond gradient -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Color="#e8eefc" Offset="0"/>
@@ -17,7 +16,6 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <!-- Hoofdkaart -->
         <Border Background="White" CornerRadius="16"
                 Width="300" Padding="30"
                 VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -26,7 +24,6 @@
             </Border.Effect>
 
             <StackPanel>
-                <!-- Logo / titel -->
                 <TextBlock Text="📚 ReadMore"
                            FontSize="26"
                            FontWeight="Bold"
@@ -40,7 +37,6 @@
                            HorizontalAlignment="Center"
                            Margin="0,0,0,20"/>
 
-                <!-- Gebruikersnaam -->
                 <TextBlock Text="Gebruikersnaam"
                            FontWeight="SemiBold"
                            Foreground="#2B3A67"
@@ -53,7 +49,6 @@
                              BorderThickness="0"/>
                 </Border>
 
-                <!-- Wachtwoord -->
                 <TextBlock Text="Wachtwoord"
                            FontWeight="SemiBold"
                            Foreground="#2B3A67"
@@ -66,7 +61,6 @@
                                  BorderThickness="0"/>
                 </Border>
 
-                <!-- Buttons -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,25,0,0" >
                     <Button Content="Login"
                             Width="110" Height="35"
