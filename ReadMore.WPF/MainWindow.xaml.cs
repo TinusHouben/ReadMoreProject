@@ -42,7 +42,6 @@ namespace ReadMore.WPF
             return _context.UserRoles
                 .Any(ur => ur.UserId == _currentUser.Id && _context.Roles.Any(r => r.Id == ur.RoleId && r.Name == "Admin"));
         }
-
         private void ConfigureAccess()
         {
             bool isAdmin = IsAdmin();
@@ -50,12 +49,12 @@ namespace ReadMore.WPF
 
             if (!isAdmin)
             {
-                RemoveTab("Admin");
+                RemoveTab("BoekenBeheer");
+                RemoveTab("Bestellingsbeheer");
                 RemoveTab("Gebruikersbeheer");
             }
             else
             {
-                // Admins hoeven de publieke bestellingen-tab niet te zien
                 RemoveTab("Bestellingen");
             }
         }
