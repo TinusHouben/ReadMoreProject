@@ -29,8 +29,15 @@ namespace ReadMore.WPF
             if (decimal.TryParse(PriceTextBox.Text, out decimal price))
                 _book.Price = price;
 
+            _context.Books.Update(_book);
             _context.SaveChanges();
-            Close();
+
+            DialogResult = true;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
         }
     }
 }

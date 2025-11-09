@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using ReadMore.Models;
 
 namespace ReadMore.WPF
@@ -11,20 +12,38 @@ namespace ReadMore.WPF
         {
             InitializeComponent();
             _context = context;
+
+            TitleTextBox.Focus();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            string title = TitleTextBox.Text.Trim();
+            string author = AuthorTextBox.Text.Trim();
+            string isbn = IsbnTextBox.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(title) ||
+                string.IsNullOrWhiteSpace(author) ||
+                string.IsNullOrWhiteSpace(isbn) ||
+                !decimal.TryParse(PriceTextBox.Text.Trim(), out var price))
+            {
+                MessageBox.Show("Vul alle velden correct in, inclusief een geldig prijsbedrag.",
+                                "Ongeldige invoer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             var book = new Book
             {
-                Title = TitleTextBox.Text,
-                Author = AuthorTextBox.Text,
-                ISBN = IsbnTextBox.Text,
-                Price = decimal.TryParse(PriceTextBox.Text, out var price) ? price : 0
+                Title = title,
+                Author = author,
+                ISBN = isbn,
+                Price = price
             };
 
             _context.Books.Add(book);
             _context.SaveChanges();
+
+            MessageBox.Show($"Boek '{title}' succesvol toegevoegd.", "Succes", MessageBoxButton.OK, MessageBoxImage.Information);
             DialogResult = true;
         }
 

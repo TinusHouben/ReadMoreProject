@@ -1,28 +1,68 @@
 ﻿<Window x:Class="ReadMore.WPF.EditBookWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Bewerk Boek" Height="300" Width="400">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        Title="Bewerk Boek"
+        Height="350" Width="450"
+        WindowStartupLocation="CenterOwner"
+        Background="#F3F4F6"
+        FontFamily="Segoe UI"
+        FontSize="14"
+        ResizeMode="NoResize">
 
-        <TextBlock Text="Titel:" Grid.Row="0"/>
-        <TextBox x:Name="TitleTextBox" Grid.Row="0" Margin="100,0,0,5"/>
+    <Grid>
+        <Border CornerRadius="16" Background="White" Margin="20" Padding="20">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.2"/>
+            </Border.Effect>
 
-        <TextBlock Text="Auteur:" Grid.Row="1"/>
-        <TextBox x:Name="AuthorTextBox" Grid.Row="1" Margin="100,0,0,5"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <TextBlock Text="ISBN:" Grid.Row="2"/>
-        <TextBox x:Name="IsbnTextBox" Grid.Row="2" Margin="100,0,0,5"/>
+                <!-- Titel -->
+                <TextBlock Text="Titel:" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,4"/>
+                <TextBox x:Name="TitleTextBox" Grid.Row="0" Margin="100,0,0,4" Height="32" Padding="6,2,6,2"
+                         Background="#F9FAFB" BorderBrush="#D1D5DB" BorderThickness="1"
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
 
-        <TextBlock Text="Prijs:" Grid.Row="3"/>
-        <TextBox x:Name="PriceTextBox" Grid.Row="3" Margin="100,0,0,5"/>
+                <!-- Auteur -->
+                <TextBlock Text="Auteur:" Grid.Row="1" VerticalAlignment="Center" Margin="0,8,0,4"/>
+                <TextBox x:Name="AuthorTextBox" Grid.Row="1" Margin="100,0,0,4" Height="32" Padding="6,2,6,2"
+                         Background="#F9FAFB" BorderBrush="#D1D5DB" BorderThickness="1"
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
 
-        <Button Content="Opslaan" Grid.Row="4" Width="100" Margin="0,5,260,5" Click="SaveButton_Click"/>
+                <!-- ISBN -->
+                <TextBlock Text="ISBN:" Grid.Row="2" VerticalAlignment="Center" Margin="0,8,0,4"/>
+                <TextBox x:Name="IsbnTextBox" Grid.Row="2" Margin="100,0,0,4" Height="32" Padding="6,2,6,2"
+                         Background="#F9FAFB" BorderBrush="#D1D5DB" BorderThickness="1"
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+
+                <!-- Prijs -->
+                <TextBlock Text="Prijs (€):" Grid.Row="3" VerticalAlignment="Center" Margin="0,8,0,4"/>
+                <TextBox x:Name="PriceTextBox" Grid.Row="3" Margin="100,0,0,4" Height="32" Padding="6,2,6,2"
+                         Background="#F9FAFB" BorderBrush="#D1D5DB" BorderThickness="1"
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+
+                <!-- Buttons -->
+                <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                    <Button Content="Opslaan" Width="120" Height="32" Margin="0,0,10,0"
+                            Background="#2B3A67" Foreground="White" BorderThickness="0"
+                            Click="SaveButton_Click"/>
+                    <Button Content="Annuleren" Width="120" Height="32"
+                            Background="#E5E7EB" Foreground="#2B3A67" BorderThickness="0"
+                            Click="CancelButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
