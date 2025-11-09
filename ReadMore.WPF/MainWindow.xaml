@@ -86,7 +86,7 @@
                     </TabItem>
 
                     <!-- 🛠️ Admin Boeken -->
-                    <TabItem Header="🛠️ Admin Boeken">
+                    <TabItem Header="🛠️ BoekenBeheer">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -139,7 +139,7 @@
                     </TabItem>
 
                     <!-- 📦 Bestellingenbeheer (Admin) -->
-                    <TabItem Header="📦 Bestellingenbeheer">
+                    <TabItem Header="📦 Bestellingsbeheer">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
