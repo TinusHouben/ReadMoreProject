@@ -85,12 +85,11 @@
                         </Grid>
                     </TabItem>
 
-                    <!-- 🛠️ Admin -->
-                    <TabItem Header="🛠️ Admin">
+                    <!-- 🛠️ Admin Boeken -->
+                    <TabItem Header="🛠️ Admin Boeken">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="2*"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
@@ -104,7 +103,7 @@
                                              Background="Transparent"
                                              BorderThickness="0"
                                              TextChanged="AdminSearchTextBox_TextChanged"/>
-                                    <TextBlock Text="Zoek boeken of bestellingen..."
+                                    <TextBlock Text="Zoek boeken..."
                                                Foreground="Gray"
                                                IsHitTestVisible="False"
                                                Margin="10,0,0,0"
@@ -121,42 +120,52 @@
                                 <Button Content="❌ Verwijder Boek" Width="130" Height="32" Margin="0,0,8,0"
                                         Background="#EF4444" Foreground="White" BorderThickness="0"
                                         Click="DeleteBookButton_Click"/>
+                                <Button Content="🚪 Logout" Width="100" Height="32" Margin="10,0,0,0"
+                                        Background="#E5E7EB" Foreground="#2B3A67" BorderThickness="0"
+                                        Click="LogoutButton_Click"/>
+                            </StackPanel>
+
+                            <DataGrid x:Name="AdminBooksDataGrid" AutoGenerateColumns="False" CanUserAddRows="False"
+                                      IsReadOnly="True" AlternatingRowBackground="#F9FAFB" Grid.Row="1">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                                    <DataGridTextColumn Header="Titel" Binding="{Binding Title}" Width="*"/>
+                                    <DataGridTextColumn Header="Auteur" Binding="{Binding Author}" Width="200"/>
+                                    <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="150"/>
+                                    <DataGridTextColumn Header="Prijs (€)" Binding="{Binding Price}" Width="100"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- 📦 Bestellingenbeheer (Admin) -->
+                    <TabItem Header="📦 Bestellingenbeheer">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                                 <Button Content="⟳ Vernieuw" Width="100" Height="32" Margin="0,0,8,0"
                                         Background="#F59E0B" Foreground="White" BorderThickness="0"
                                         Click="RefreshOrdersButton_Click"/>
                                 <Button Content="✓ Markeer Verwerkt" Width="160" Height="32"
                                         Background="#6D28D9" Foreground="White" BorderThickness="0"
                                         Click="MarkProcessedButton_Click"/>
-                                <Button Content="🚪 Logout" Width="100" Height="32" Margin="10,0,0,0"
-                                        Background="#E5E7EB" Foreground="#2B3A67" BorderThickness="0"
-                                        Click="LogoutButton_Click"/>
                             </StackPanel>
 
-                            <GroupBox Header="Boeken (Admin)" Grid.Row="1" Margin="0,0,0,10">
-                                <DataGrid x:Name="AdminBooksDataGrid" AutoGenerateColumns="False" CanUserAddRows="False"
-                                          IsReadOnly="True" AlternatingRowBackground="#F9FAFB">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
-                                        <DataGridTextColumn Header="Titel" Binding="{Binding Title}" Width="*"/>
-                                        <DataGridTextColumn Header="Auteur" Binding="{Binding Author}" Width="200"/>
-                                        <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="150"/>
-                                        <DataGridTextColumn Header="Prijs (€)" Binding="{Binding Price}" Width="100"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </GroupBox>
-
-                            <GroupBox Header="Bestellingen (Admin)" Grid.Row="2">
-                                <DataGrid x:Name="AdminOrdersDataGrid" AutoGenerateColumns="False"
-                                          CanUserAddRows="False" AlternatingRowBackground="#F9FAFB">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80"/>
-                                        <DataGridTextColumn Header="Gebruiker" Binding="{Binding UserName}" Width="150"/>
-                                        <DataGridTextColumn Header="Boeken" Binding="{Binding BookTitles}" Width="*"/>
-                                        <DataGridTextColumn Header="Totaal (€)" Binding="{Binding TotalPrice}" Width="100"/>
-                                        <DataGridCheckBoxColumn Header="Verwerkt" Binding="{Binding IsProcessed}" Width="100"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </GroupBox>
+                            <DataGrid x:Name="AdminOrdersDataGrid" AutoGenerateColumns="False"
+                                      CanUserAddRows="False" AlternatingRowBackground="#F9FAFB"
+                                      Grid.Row="1" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80"/>
+                                    <DataGridTextColumn Header="Gebruiker" Binding="{Binding UserName}" Width="150"/>
+                                    <DataGridTextColumn Header="Boeken" Binding="{Binding BookTitles}" Width="*"/>
+                                    <DataGridTextColumn Header="Totaal (€)" Binding="{Binding TotalPrice}" Width="100"/>
+                                    <DataGridCheckBoxColumn Header="Verwerkt" Binding="{Binding IsProcessed}" Width="100"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
                     </TabItem>
 
@@ -214,7 +223,7 @@
                         </Grid>
                     </TabItem>
 
-                    <!-- 📦 Bestellingen -->
+                    <!-- 📦 Publieke bestellingen -->
                     <TabItem Header="📦 Bestellingen">
                         <DataGrid x:Name="OrdersDataGrid" AutoGenerateColumns="False" CanUserAddRows="False"
                                   AlternatingRowBackground="#F9FAFB" IsReadOnly="True">
@@ -227,6 +236,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </TabItem>
+
                 </TabControl>
             </DockPanel>
         </Border>

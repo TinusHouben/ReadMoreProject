@@ -47,16 +47,16 @@ namespace ReadMore.WPF
         private void ConfigureAccess()
         {
             bool isAdmin = IsAdmin();
-
             Title = $"📚 ReadMore - Ingelogd als {_currentUser.UserName} {(isAdmin ? "(Admin)" : "(Gebruiker)")}";
 
-            // Verberg admin-tabbladen als gebruiker geen admin is
             if (!isAdmin)
             {
-                RemoveTab("Admin");
+                RemoveTab("Admin"); // alleen boeken
+                RemoveTab("Bestellingenbeheer"); // admin orders
                 RemoveTab("Gebruikersbeheer");
             }
         }
+
 
         private void RemoveTab(string headerContains)
         {
