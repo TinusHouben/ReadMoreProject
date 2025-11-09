@@ -14,34 +14,27 @@ namespace ReadMore.Models
         public DbSet<Book> Books { get; set; }
         public DbSet<Order> Orders { get; set; }
 
-        // ✅ Contactberichten
         public DbSet<ContactMessage> ContactMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // Decimal precisie
             builder.Entity<Book>().Property(b => b.Price).HasColumnType("decimal(18,2)");
             builder.Entity<Order>().Property(o => o.TotalPrice).HasColumnType("decimal(18,2)");
 
-            // Soft delete filters
             builder.Entity<Book>().HasQueryFilter(b => !b.IsDeleted);
             builder.Entity<Order>().HasQueryFilter(o => !o.IsDeleted);
 
-            // Many-to-many relatie
             builder.Entity<Order>()
                    .HasMany(o => o.Books)
                    .WithMany(b => b.Orders)
                    .UsingEntity(j => j.ToTable("OrderBooks"));
-
-            // Rollen seeden
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
                 new IdentityRole { Id = "2", Name = "User", NormalizedName = "USER" }
             );
 
-            // Admin-account seeden
             var admin = new ApplicationUser
             {
                 Id = "admin-id",
@@ -58,7 +51,6 @@ namespace ReadMore.Models
 
             builder.Entity<ApplicationUser>().HasData(admin);
 
-            // Admin koppelen aan Admin-rol
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {

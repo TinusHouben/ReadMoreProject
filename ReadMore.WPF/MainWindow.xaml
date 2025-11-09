@@ -23,7 +23,6 @@
 
             <DockPanel>
 
-                <!-- Header & Logout -->
                 <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="0,0,0,15">
                     <TextBlock Text="📚 ReadMore Beheersysteem"
                                FontSize="24"
@@ -41,7 +40,6 @@
                             BorderThickness="0" Padding="10"
                             FontSize="13" FontWeight="SemiBold">
 
-                    <!-- Catalogus -->
                     <TabItem Header="📚 Catalogus">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
@@ -90,7 +88,6 @@
                         </Grid>
                     </TabItem>
 
-                    <!-- Admin: Boekenbeheer -->
                     <TabItem Header="🛠️ BoekenBeheer">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
@@ -140,7 +137,6 @@
                         </Grid>
                     </TabItem>
 
-                    <!-- Admin: Bestellingsbeheer -->
                     <TabItem Header="📦 Bestellingsbeheer">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
@@ -171,7 +167,6 @@
                         </Grid>
                     </TabItem>
 
-                    <!-- Gebruikersbeheer -->
                     <TabItem Header="👥 Gebruikersbeheer">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
@@ -225,7 +220,6 @@
                         </Grid>
                     </TabItem>
 
-                    <!-- Publieke bestellingen -->
                     <TabItem x:Name="PublicOrdersTab" Header="📦 Bestellingen">
                         <DataGrid x:Name="OrdersDataGrid" AutoGenerateColumns="False" CanUserAddRows="False"
                                   AlternatingRowBackground="#F9FAFB" IsReadOnly="True">
@@ -239,7 +233,6 @@
                         </DataGrid>
                     </TabItem>
 
-                    <!-- Contacteer Admin -->
                     <TabItem Header="📬 Contact">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
@@ -261,7 +254,6 @@
                         </Grid>
                     </TabItem>
 
-                    <!-- Admin Contact Messages -->
                     <TabItem Header="📬 Admin Berichten">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
@@ -270,7 +262,6 @@
                             </Grid.RowDefinitions>
 
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,12" Grid.Row="0">
-                                <!-- Zoekbalk -->
                                 <Grid Width="300" Height="32" Margin="0,0,10,0">
                                     <Border Background="#F9FAFB" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6"/>
                                     <TextBox x:Name="ContactAdminSearchTextBox"
@@ -287,7 +278,6 @@
                                                x:Name="ContactAdminPlaceholder"/>
                                 </Grid>
 
-                                <!-- Buttons -->
                                 <Button Content="⟳ Vernieuw" Width="100" Height="32" Margin="0,0,8,0"
                                         Background="#F59E0B" Foreground="White" BorderThickness="0"
                                         Click="RefreshContactMessagesButton_Click"/>
