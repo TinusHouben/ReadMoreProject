@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using Microsoft.EntityFrameworkCore;
 using ReadMore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ReadMore.WPF
 {
@@ -73,6 +73,18 @@ namespace ReadMore.WPF
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void BooksSearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            string query = BooksSearchTextBox.Text?.Trim() ?? string.Empty;
+            BooksPlaceholder.Visibility = string.IsNullOrEmpty(query) ? Visibility.Visible : Visibility.Hidden;
+
+            var filtered = _booksList
+                .Where(b => b.Title.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            BooksDataGrid.ItemsSource = filtered;
         }
 
         private class OrderBookItem
