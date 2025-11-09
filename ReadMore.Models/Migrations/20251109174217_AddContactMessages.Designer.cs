@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReadMore.Models;
 
@@ -11,9 +12,11 @@ using ReadMore.Models;
 namespace ReadMore.Models.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251109174217_AddContactMessages")]
+    partial class AddContactMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,43 +38,6 @@ namespace ReadMore.Models.Migrations
                     b.HasIndex("OrdersId");
 
                     b.ToTable("OrderBooks", (string)null);
-                });
-
-            modelBuilder.Entity("ContactMessage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsResolved")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ContactMessages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -300,15 +266,15 @@ namespace ReadMore.Models.Migrations
                         {
                             Id = "admin-id",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2e3886e3-9279-4c46-9565-4c57b341129d",
+                            ConcurrencyStamp = "41da4854-f62c-45ec-95b1-7ae6e29f6403",
                             Email = "admin@readmore.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@READMORE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEv5Z+dgsQqsT5QxSZgz1EMW+TRzGvT3lsktzCz3LIkQZS2y6VP4NrO+LqvICDs+ow==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEtI8j8ZS6vwcarkvkXwN89mM+k88auoz+PWlPWL6+/2DVH8oDHFSKAbjX9b3jpPPw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "55549360-c2b2-44ea-9705-ad7cb6118860",
+                            SecurityStamp = "d12b7d74-473f-424e-8cc9-6e39cb8868b4",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -343,6 +309,45 @@ namespace ReadMore.Models.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("ReadMore.Models.ContactMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsResolved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ContactMessages");
                 });
 
             modelBuilder.Entity("ReadMore.Models.Order", b =>
@@ -386,17 +391,6 @@ namespace ReadMore.Models.Migrations
                         .HasForeignKey("OrdersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ContactMessage", b =>
-                {
-                    b.HasOne("ReadMore.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

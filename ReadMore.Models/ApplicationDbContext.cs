@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System;
 
 namespace ReadMore.Models
 {
@@ -12,6 +13,9 @@ namespace ReadMore.Models
 
         public DbSet<Book> Books { get; set; }
         public DbSet<Order> Orders { get; set; }
+
+        // ✅ Contactberichten
+        public DbSet<ContactMessage> ContactMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
