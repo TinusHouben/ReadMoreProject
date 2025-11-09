@@ -21,11 +21,14 @@ namespace ReadMore.WPF
             _context = context;
             _currentUser = user;
             ConfigureAccess();
-            LoadCatalogus();
-            LoadOrdersPublic();
 
-            // Alleen laden als admin 
-            if (IsAdmin())
+            // Data laden
+            LoadCatalogus();
+            if (!IsAdmin())
+            {
+                LoadOrdersPublic();
+            }
+            else
             {
                 LoadAdminBooks();
                 LoadAdminOrders();
@@ -33,7 +36,7 @@ namespace ReadMore.WPF
             }
         }
 
-        // 🔒 Controleer of de gebruiker admin is 
+        // Controleer of de gebruiker admin is
         private bool IsAdmin()
         {
             return _context.UserRoles
@@ -45,7 +48,6 @@ namespace ReadMore.WPF
             bool isAdmin = IsAdmin();
             Title = $"📚 ReadMore - Ingelogd als {_currentUser.UserName} {(isAdmin ? "(Admin)" : "(Gebruiker)")}";
 
-            // Verberg admin-tabbladen als gebruiker geen admin is
             if (!isAdmin)
             {
                 RemoveTab("Admin");
@@ -66,7 +68,7 @@ namespace ReadMore.WPF
             if (tab != null) MainTabControl.Items.Remove(tab);
         }
 
-        #region Catalogus 
+        #region Catalogus
         private void LoadCatalogus()
         {
             _catalogBooks = _context.Books.Where(b => !b.IsDeleted).ToList();
@@ -77,24 +79,21 @@ namespace ReadMore.WPF
         {
             string q = CatalogusSearchTextBox.Text?.Trim() ?? string.Empty;
             CatalogusPlaceholder.Visibility = string.IsNullOrEmpty(q) ? Visibility.Visible : Visibility.Hidden;
-
-            var filtered = _catalogBooks
+            CatalogusDataGrid.ItemsSource = _catalogBooks
                 .Where(b => b.Title.Contains(q, System.StringComparison.OrdinalIgnoreCase))
                 .ToList();
-
-            CatalogusDataGrid.ItemsSource = filtered;
         }
 
         private void CreateOrderButton_Click(object sender, RoutedEventArgs e)
         {
             var orderWindow = new CreateOrderWindow(_context, _currentUser);
             orderWindow.ShowDialog();
-            LoadOrdersPublic();
-            if (IsAdmin()) LoadAdminOrders();
+            if (!IsAdmin()) LoadOrdersPublic();
+            else LoadAdminOrders();
         }
         #endregion
 
-        #region Logout 
+        #region Logout
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             var loginWindow = new LoginWindow();
@@ -103,7 +102,7 @@ namespace ReadMore.WPF
         }
         #endregion
 
-        #region Admin functies 
+        #region Admin functies
         private void LoadAdminBooks()
         {
             if (!IsAdmin()) return;
@@ -112,12 +111,7 @@ namespace ReadMore.WPF
 
         private void AddBookButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!IsAdmin())
-            {
-                MessageBox.Show("Alleen admins kunnen boeken toevoegen.", "Geen toegang", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
+            if (!IsAdmin()) { ShowAdminAccessError(); return; }
             var add = new AddBookWindow(_context);
             add.ShowDialog();
             LoadCatalogus();
@@ -126,18 +120,8 @@ namespace ReadMore.WPF
 
         private void EditBookButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!IsAdmin())
-            {
-                MessageBox.Show("Alleen admins kunnen boeken bewerken.", "Geen toegang", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (AdminBooksDataGrid.SelectedItem is not Book selected)
-            {
-                MessageBox.Show("Selecteer eerst een boek.", "Let op", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
+            if (!IsAdmin()) { ShowAdminAccessError(); return; }
+            if (AdminBooksDataGrid.SelectedItem is not Book selected) { ShowSelectItemWarning("boek"); return; }
             var edit = new EditBookWindow(_context, selected);
             edit.ShowDialog();
             LoadAdminBooks();
@@ -145,17 +129,8 @@ namespace ReadMore.WPF
 
         private void DeleteBookButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!IsAdmin())
-            {
-                MessageBox.Show("Alleen admins kunnen boeken verwijderen.", "Geen toegang", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (AdminBooksDataGrid.SelectedItem is not Book selected)
-            {
-                MessageBox.Show("Selecteer eerst een boek.", "Let op", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+            if (!IsAdmin()) { ShowAdminAccessError(); return; }
+            if (AdminBooksDataGrid.SelectedItem is not Book selected) { ShowSelectItemWarning("boek"); return; }
 
             if (MessageBox.Show($"Weet je zeker dat je '{selected.Title}' wilt verwijderen?", "Bevestigen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
@@ -188,17 +163,8 @@ namespace ReadMore.WPF
 
         private void MarkProcessedButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!IsAdmin())
-            {
-                MessageBox.Show("Alleen admins kunnen bestellingen verwerken.", "Geen toegang", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (AdminOrdersDataGrid.SelectedItem is not AdminOrderView selected)
-            {
-                MessageBox.Show("Selecteer een bestelling.", "Let op", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+            if (!IsAdmin()) { ShowAdminAccessError(); return; }
+            if (AdminOrdersDataGrid.SelectedItem is not AdminOrderView selected) { ShowSelectItemWarning("bestelling"); return; }
 
             var orderEntity = _context.Orders.FirstOrDefault(o => o.Id == selected.Id);
             if (orderEntity != null)
@@ -209,9 +175,12 @@ namespace ReadMore.WPF
                 MessageBox.Show($"Bestelling {orderEntity.Id} gemarkeerd als verwerkt.", "Gereed", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+
+        private void ShowAdminAccessError() => MessageBox.Show("Alleen admins kunnen deze actie uitvoeren.", "Geen toegang", MessageBoxButton.OK, MessageBoxImage.Warning);
+        private void ShowSelectItemWarning(string item) => MessageBox.Show($"Selecteer eerst een {item}.", "Let op", MessageBoxButton.OK, MessageBoxImage.Warning);
         #endregion
 
-        #region Admin zoeken en vernieuwen 
+        #region Admin zoeken en vernieuwen
         private void AdminSearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             string query = AdminSearchTextBox.Text?.Trim() ?? string.Empty;
@@ -224,19 +193,17 @@ namespace ReadMore.WPF
                 return;
             }
 
-            var filteredBooks = _context.Books
+            AdminBooksDataGrid.ItemsSource = _context.Books
                 .Where(b => !b.IsDeleted &&
                             (b.Title.Contains(query, System.StringComparison.OrdinalIgnoreCase) ||
                              b.Author.Contains(query, System.StringComparison.OrdinalIgnoreCase) ||
                              b.ISBN.Contains(query, System.StringComparison.OrdinalIgnoreCase)))
                 .ToList();
-            AdminBooksDataGrid.ItemsSource = filteredBooks;
 
-            var filteredOrders = _adminOrders
+            AdminOrdersDataGrid.ItemsSource = _adminOrders
                 .Where(o => o.UserName.Contains(query, System.StringComparison.OrdinalIgnoreCase) ||
                             o.BookTitles.Contains(query, System.StringComparison.OrdinalIgnoreCase))
                 .ToList();
-            AdminOrdersDataGrid.ItemsSource = filteredOrders;
         }
 
         private void RefreshOrdersButton_Click(object sender, RoutedEventArgs e)
@@ -247,7 +214,7 @@ namespace ReadMore.WPF
         }
         #endregion
 
-        #region Publieke bestellingen 
+        #region Publieke bestellingen
         private void LoadOrdersPublic()
         {
             var orders = _context.Orders
@@ -267,7 +234,7 @@ namespace ReadMore.WPF
         }
         #endregion
 
-        #region Gebruikersbeheer 
+        #region Gebruikersbeheer
         private void LoadUsers()
         {
             if (!IsAdmin()) return;
@@ -280,33 +247,17 @@ namespace ReadMore.WPF
             string query = UsersSearchTextBox.Text?.Trim() ?? string.Empty;
             UsersPlaceholder.Visibility = string.IsNullOrEmpty(query) ? Visibility.Visible : Visibility.Hidden;
 
-            var filtered = _users
+            UsersDataGrid.ItemsSource = _users
                 .Where(u => u.UserName.Contains(query, System.StringComparison.OrdinalIgnoreCase) ||
                             (u.Email != null && u.Email.Contains(query, System.StringComparison.OrdinalIgnoreCase)))
                 .ToList();
-
-            UsersDataGrid.ItemsSource = filtered;
         }
 
         private void DeleteUserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!IsAdmin())
-            {
-                MessageBox.Show("Alleen admins kunnen gebruikers verwijderen.", "Geen toegang", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (UsersDataGrid.SelectedItem is not ApplicationUser selected)
-            {
-                MessageBox.Show("Selecteer een gebruiker.", "Let op", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (selected.Id == _currentUser.Id)
-            {
-                MessageBox.Show("Je kunt jezelf niet verwijderen.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+            if (!IsAdmin()) { ShowAdminAccessError(); return; }
+            if (UsersDataGrid.SelectedItem is not ApplicationUser selected) { ShowSelectItemWarning("gebruiker"); return; }
+            if (selected.Id == _currentUser.Id) { MessageBox.Show("Je kunt jezelf niet verwijderen.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
 
             if (MessageBox.Show($"Weet je zeker dat je '{selected.UserName}' wilt verwijderen?", "Bevestigen", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
@@ -350,7 +301,7 @@ namespace ReadMore.WPF
                 }
 
                 _context.SaveChanges();
-                LoadUsers(); // ✅ lijst vernieuwen zonder herstart 
+                LoadUsers();
                 MessageBox.Show($"Rol van gebruiker '{user.UserName}' is gewijzigd naar '{newRole}'.", "Succes", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }

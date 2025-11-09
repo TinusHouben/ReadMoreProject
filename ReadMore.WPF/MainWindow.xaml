@@ -22,12 +22,20 @@
             </Border.Effect>
 
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top"
-                           Text="📚 ReadMore Beheersysteem"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Foreground="#2B3A67"
-                           Margin="10,0,0,15"/>
+
+                <!-- Header en Logout knop -->
+                <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="0,0,0,15">
+                    <TextBlock Text="📚 ReadMore Beheersysteem"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="#2B3A67"
+                               VerticalAlignment="Center"/>
+                    <Button Content="🚪 Logout" Width="100" Height="32"
+                            Background="#E5E7EB" Foreground="#2B3A67" BorderThickness="0"
+                            HorizontalAlignment="Right"
+                            DockPanel.Dock="Right"
+                            Click="LogoutButton_Click"/>
+                </DockPanel>
 
                 <TabControl x:Name="MainTabControl" Background="White"
                             BorderThickness="0" Padding="10"
@@ -62,9 +70,6 @@
                                 <Button Content="🛒 Nieuwe Bestelling" Width="160" Height="32" Margin="0,0,8,0"
                                         Background="#2B3A67" Foreground="White" BorderThickness="0"
                                         Click="CreateOrderButton_Click"/>
-                                <Button Content="🚪 Logout" Width="100" Height="32"
-                                        Background="#E5E7EB" Foreground="#2B3A67" BorderThickness="0"
-                                        Click="LogoutButton_Click"/>
                             </StackPanel>
 
                             <DataGrid x:Name="CatalogusDataGrid" Grid.Row="1"
@@ -120,9 +125,6 @@
                                 <Button Content="❌ Verwijder Boek" Width="130" Height="32" Margin="0,0,8,0"
                                         Background="#EF4444" Foreground="White" BorderThickness="0"
                                         Click="DeleteBookButton_Click"/>
-                                <Button Content="🚪 Logout" Width="100" Height="32" Margin="10,0,0,0"
-                                        Background="#E5E7EB" Foreground="#2B3A67" BorderThickness="0"
-                                        Click="LogoutButton_Click"/>
                             </StackPanel>
 
                             <DataGrid x:Name="AdminBooksDataGrid" AutoGenerateColumns="False" CanUserAddRows="False"
@@ -138,7 +140,7 @@
                         </Grid>
                     </TabItem>
 
-                    <!-- 📦 Bestellingenbeheer (Admin) -->
+                    <!-- 📦 Bestellingsbeheer (Admin) -->
                     <TabItem Header="📦 Bestellingsbeheer">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
@@ -223,8 +225,8 @@
                         </Grid>
                     </TabItem>
 
-                    <!-- 📦 Publieke bestellingen -->
-                    <TabItem Header="📦 Bestellingen">
+                    <!-- 📦 Publieke bestellingen (Verborgen voor admins) -->
+                    <TabItem x:Name="PublicOrdersTab" Header="📦 Bestellingen">
                         <DataGrid x:Name="OrdersDataGrid" AutoGenerateColumns="False" CanUserAddRows="False"
                                   AlternatingRowBackground="#F9FAFB" IsReadOnly="True">
                             <DataGrid.Columns>
